@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { clsx } from "@/lib/clsx";
+export { formatPKR } from "@/lib/money";
 
 export function Button({
   children,
@@ -126,7 +127,33 @@ export function Badge({
   );
 }
 
-export function formatPKR(amount: number | null | undefined): string {
-  if (amount === null || amount === undefined) return "On quote";
-  return "Rs " + Number(amount).toLocaleString("en-PK");
+export function Spinner({ label }: { label?: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 py-16 text-slate-400">
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-200 border-t-brand-600" />
+      {label && <p className="text-sm">{label}</p>}
+    </div>
+  );
 }
+
+export function EmptyState({
+  icon = "📭",
+  title,
+  hint,
+  children,
+}: {
+  icon?: string;
+  title: string;
+  hint?: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white/50 px-6 py-14 text-center">
+      <div className="text-4xl">{icon}</div>
+      <h3 className="mt-3 font-semibold text-slate-900">{title}</h3>
+      {hint && <p className="mt-1 max-w-sm text-sm text-slate-500">{hint}</p>}
+      {children && <div className="mt-4">{children}</div>}
+    </div>
+  );
+}
+

@@ -20,6 +20,8 @@ Open http://localhost:3000 — the landing page runs without any backend yet.
    - [`supabase/patch_v2.sql`](supabase/patch_v2.sql) — provider job access, rating trigger, verification storage bucket.
    - [`supabase/patch_v3_realtime.sql`](supabase/patch_v3_realtime.sql) — **required** for live chat, live location tracking, and live status updates.
    - [`supabase/patch_v4_business_logic.sql`](supabase/patch_v4_business_logic.sql) — **required**: server-enforced pricing/status/reviews, COD payment + commission ledger, and notifications.
+   - [`supabase/patch_v5_settlements_disputes.sql`](supabase/patch_v5_settlements_disputes.sql) — **required**: commission-settlement RPC + disputes admin access.
+   - [`supabase/patch_v6_price_lock.sql`](supabase/patch_v6_price_lock.sql) — **required**: locks a job's price once set (anti-tamper), lets Pros price quote jobs, and rate-limits bookings.
      *(Patches are idempotent and safe to re-run.)*
 
 See [`../LAUNCH_READINESS.md`](../LAUNCH_READINESS.md) for the full architect audit and
@@ -96,7 +98,16 @@ supabase/
 - [x] COD payment + commission ledger automation
 - [x] In-app notifications (bell + realtime + /notifications)
 - [x] Error/404/loading boundaries · toasts · legal & support pages · health check · robots/sitemap
+- [x] Provider wallet (ledger-based earnings + commission owed) · admin settlements
+- [x] Disputes: "report a problem" on jobs + admin resolution UI
+- [x] Automated tests (Vitest) for money/accounting + status state-machine
 - [ ] Phone OTP auth (needs an SMS provider) — replaces email/password
-- [ ] Provider payout/settlement UI · admin disputes UI (P1)
 - [ ] Email notifications + Sentry monitoring + rate limiting (P1)
 - [ ] Escrow + online payments (JazzCash/Easypaisa) · Directions/ETA (P2)
+
+## Testing
+
+```bash
+npm test        # Vitest unit tests (money/accounting + job status state-machine)
+npm run build   # type-check + production build
+```

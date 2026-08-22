@@ -11,6 +11,8 @@ const TABS = [
   ["/admin", "Overview"],
   ["/admin/providers", "Providers"],
   ["/admin/jobs", "Jobs"],
+  ["/admin/settlements", "Settlements"],
+  ["/admin/disputes", "Disputes"],
   ["/admin/catalog", "Catalog"],
 ];
 

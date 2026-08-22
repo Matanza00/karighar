@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { AppShell } from "@/components/AppShell";
-import { Card, Badge, formatPKR, LinkButton, inputClass } from "@/components/ui";
+import { Card, Badge, formatPKR, LinkButton, inputClass, Spinner } from "@/components/ui";
 import type { Service, ServiceCategory } from "@/lib/types";
 
 type CatalogCat = ServiceCategory & { services: Service[] };
@@ -72,7 +72,7 @@ export default function BookPage() {
         />
       </div>
 
-      {loading && <p className="mt-10 text-slate-500">Loading services…</p>}
+      {loading && <Spinner label="Loading services…" />}
       {error && (
         <Card className="mt-8 border-rose-200">
           <p className="text-rose-600">{error}</p>

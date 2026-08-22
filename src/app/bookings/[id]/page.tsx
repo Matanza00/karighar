@@ -9,6 +9,7 @@ import { Card, Button, Badge, inputClass, formatPKR } from "@/components/ui";
 import { JobTimeline } from "@/components/JobTimeline";
 import { JobChat } from "@/components/JobChat";
 import { TrackingMap } from "@/components/maps/TrackingMap";
+import { DisputeButton } from "@/components/DisputeButton";
 import type { Job, Bid, Profile } from "@/lib/types";
 
 type BidWithPro = Bid & { pro?: Profile; rating?: number };
@@ -154,7 +155,8 @@ export default function BookingDetailPage() {
   }
 
   const canCancel = ["created", "bidding", "assigned"].includes(job.status);
-  const canReview = (job.status === "completed" || job.status === "paid") && !hasReview && job.provider_id;
+  const canReview = job.status === "paid" && !hasReview && job.provider_id;
+  const awaitingPayment = job.status === "completed";
 
   return (
     <AppShell width="narrow">
@@ -250,6 +252,16 @@ export default function BookingDetailPage() {
         </Card>
       )}
 
+      {/* Awaiting payment confirmation */}
+      {awaitingPayment && (
+        <Card className="mt-6 bg-amber-50">
+          <p className="text-sm text-amber-700">
+            ✅ Work completed. Please pay <strong>{formatPKR(job.price)}</strong> in cash. Once your pro
+            confirms payment, you can leave a rating.
+          </p>
+        </Card>
+      )}
+
       {/* Rating */}
       {canReview && (
         <Card className="mt-6">
@@ -294,6 +306,12 @@ export default function BookingDetailPage() {
           <Button variant="danger" disabled={busy} onClick={cancelJob}>
             Cancel booking
           </Button>
+        </div>
+      )}
+
+      {user && job.provider_id && (
+        <div className="mt-6">
+          <DisputeButton jobId={jobId} userId={user.id} />
         </div>
       )}
     </AppShell>

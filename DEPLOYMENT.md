@@ -10,6 +10,8 @@ Follow top-to-bottom for a production launch. Est. 60–90 min.
    2. `supabase/patch_v2.sql`
    3. `supabase/patch_v3_realtime.sql`
    4. `supabase/patch_v4_business_logic.sql`   ← integrity, accounting, notifications
+   5. `supabase/patch_v5_settlements_disputes.sql`   ← settlements + disputes admin
+   6. `supabase/patch_v6_price_lock.sql`   ← price immutability + booking rate-limit
 3. **Authentication → URL Configuration:** set **Site URL** to your domain
    (e.g. `https://karighar.pk`) and add it to **Redirect URLs** plus
    `https://karighar.pk/auth/callback`.

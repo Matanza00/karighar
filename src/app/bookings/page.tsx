@@ -5,7 +5,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRequireAuth } from "@/lib/useUser";
 import { AppShell } from "@/components/AppShell";
-import { Card, Badge, LinkButton, formatPKR } from "@/components/ui";
+import { Card, Badge, LinkButton, formatPKR, Spinner, EmptyState } from "@/components/ui";
 import { JOB_STATUS_LABEL, type Job } from "@/lib/types";
 
 const OPEN = new Set(["created", "bidding", "assigned", "en_route", "arrived", "in_progress", "completed"]);
@@ -45,14 +45,13 @@ export default function BookingsPage() {
       </div>
 
       {fetching ? (
-        <p className="mt-8 text-slate-500">Loading…</p>
+        <Spinner />
       ) : jobs.length === 0 ? (
-        <Card className="mt-8 text-center">
-          <p className="text-slate-600">You have no bookings yet.</p>
-          <LinkButton href="/book" className="mt-4">
-            Book your first service
-          </LinkButton>
-        </Card>
+        <div className="mt-8">
+          <EmptyState icon="🧰" title="No bookings yet" hint="Book a plumber, electrician or AC technician in a couple of taps.">
+            <LinkButton href="/book">Book your first service</LinkButton>
+          </EmptyState>
+        </div>
       ) : (
         <div className="mt-6 space-y-3">
           {jobs.map((job) => (
