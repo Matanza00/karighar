@@ -11,20 +11,22 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
 
-  --color-brand-50: #ecfdf5;
-  --color-brand-100: #d1fae5;
-  --color-brand-200: #a7f3d0;
-  --color-brand-300: #6ee7b7;
-  --color-brand-400: #34d399;
-  --color-brand-500: #0d9488;
-  --color-brand-600: #0f766e;
-  --color-brand-700: #115e59;
-  --color-brand-800: #134e4a;
-  --color-brand-900: #134e4a;
+  /* Brand navy — matches the KARIGHAR logo */
+  --color-brand-50: #eef3fb;
+  --color-brand-100: #d5e2f5;
+  --color-brand-200: #adc4ea;
+  --color-brand-300: #7f9fda;
+  --color-brand-400: #4f74c4;
+  --color-brand-500: #2b4fa0;
+  --color-brand-600: #1e3a8a;
+  --color-brand-700: #172e6e;
+  --color-brand-800: #132555;
+  --color-brand-900: #0f1c40;
 
-  --color-accent-400: #fbbf24;
-  --color-accent-500: #f59e0b;
-  --color-accent-600: #d97706;
+  /* Brand orange accent — matches the KARIGHAR logo */
+  --color-accent-400: #f7913f;
+  --color-accent-500: #ea6a1c;
+  --color-accent-600: #c8540f;
 }
 
 html {

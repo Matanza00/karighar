@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { normalizePkPhone } from "@/lib/validate";
 import { Button, Field, inputClass } from "@/components/ui";
 
 export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
@@ -39,10 +40,16 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
     const supabase = createClient();
 
     if (mode === "signup") {
+      const normPhone = normalizePkPhone(phone);
+      if (!normPhone) {
+        setError("Enter a valid Pakistani mobile number, e.g. 0300 1234567");
+        setBusy(false);
+        return;
+      }
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { full_name: fullName, phone } },
+        options: { data: { full_name: fullName, phone: normPhone } },
       });
       if (error) {
         setError(error.message);
@@ -61,7 +68,7 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
         .from("profiles")
         .update({
           full_name: fullName,
-          phone,
+          phone: normPhone,
           role: asProvider ? "provider" : "customer",
         })
         .eq("id", data.session.user.id);

@@ -11,6 +11,8 @@ export default function Home() {
       {/* Hero */}
       <section className="bg-gradient-to-b from-brand-50 to-white">
         <div className="mx-auto max-w-6xl px-5 py-16 text-center sm:py-24">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/icon-512.png" alt="KARIGHAR" className="mx-auto mb-6 h-28 w-28 rounded-full shadow-sm" />
           <span className="inline-block rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-700">
             Now in Karachi
           </span>

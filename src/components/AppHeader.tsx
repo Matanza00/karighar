@@ -60,9 +60,8 @@ export function AppHeader() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-sm font-black text-white">
-            K
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/icon-192.png" alt="KARIGHAR" className="h-9 w-9 rounded-full" />
           <span className="text-lg font-extrabold tracking-tight text-slate-900">
             KARI<span className="text-brand-600">GHAR</span>
           </span>

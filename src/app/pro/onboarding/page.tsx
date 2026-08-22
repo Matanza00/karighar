@@ -7,6 +7,7 @@ import { useRequireAuth } from "@/lib/useUser";
 import { AppShell } from "@/components/AppShell";
 import { Card, Button, Field, inputClass } from "@/components/ui";
 import { KARACHI_AREAS, type ServiceCategory, type Provider } from "@/lib/types";
+import { isValidCnic, formatCnic } from "@/lib/validate";
 import { clsx } from "@/lib/clsx";
 
 export default function ProviderOnboardingPage() {
@@ -65,6 +66,10 @@ export default function ProviderOnboardingPage() {
     if (!user) return;
     if (selectedCats.length === 0) {
       setError("Pick at least one service you offer.");
+      return;
+    }
+    if (!isValidCnic(cnic)) {
+      setError("Enter a valid 13-digit CNIC, e.g. 42101-1234567-1");
       return;
     }
     setBusy(true);
@@ -179,9 +184,10 @@ export default function ProviderOnboardingPage() {
           <input
             className={inputClass}
             value={cnic}
-            onChange={(e) => setCnic(e.target.value)}
+            onChange={(e) => setCnic(formatCnic(e.target.value))}
             required
-            placeholder="42101-XXXXXXX-X"
+            inputMode="numeric"
+            placeholder="42101-1234567-1"
           />
         </Field>
 

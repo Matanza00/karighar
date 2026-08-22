@@ -12,9 +12,13 @@ Follow top-to-bottom for a production launch. Est. 60–90 min.
    4. `supabase/patch_v4_business_logic.sql`   ← integrity, accounting, notifications
    5. `supabase/patch_v5_settlements_disputes.sql`   ← settlements + disputes admin
    6. `supabase/patch_v6_price_lock.sql`   ← price immutability + booking rate-limit
+   7. `supabase/patch_v7_provider_profiles.sql`   ← public provider profiles + cancel reasons
+   8. `supabase/patch_v8_role_escalation.sql`   ← security: block admin self-escalation
+   9. `supabase/patch_v9_fix_jobs_rls.sql`   ← CRITICAL: providers can see/accept the open job pool
+   10. `supabase/patch_v10_fix_notify_cast.sql`   ← CRITICAL: unblocks status updates past 'assigned'
 3. **Authentication → URL Configuration:** set **Site URL** to your domain
-   (e.g. `https://karighar.pk`) and add it to **Redirect URLs** plus
-   `https://karighar.pk/auth/callback`.
+   (e.g. `https://thekarighar.com`) and add it to **Redirect URLs** plus
+   `https://thekarighar.com/auth/callback`.
 4. **Authentication → Providers → Email:** keep "Confirm email" **ON** for production.
 5. (Optional) **Providers → Google:** paste client ID/secret; add
    `https://YOUR-PROJECT.supabase.co/auth/v1/callback` as an authorized redirect in Google Cloud.
@@ -35,7 +39,7 @@ Follow top-to-bottom for a production launch. Est. 60–90 min.
    - `SUPABASE_SERVICE_ROLE_KEY`
    - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`
    - `NEXT_PUBLIC_GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (if using Google login)
-   - `NEXT_PUBLIC_SITE_URL` = `https://karighar.pk`
+   - `NEXT_PUBLIC_SITE_URL` = `https://thekarighar.com`
 3. Deploy. Add your custom domain in Vercel → Domains.
 
 ## 4. First admin
@@ -55,7 +59,7 @@ update profiles set role = 'admin' where id = 'YOUR-USER-ID';
 - [ ] First admin created; test the full flow on prod (book → accept → complete → pay → rate)
 - [ ] Recruit + verify 10–20 launch providers (Phase 0 supply)
 - [ ] Swap placeholders: support email/WhatsApp (`src/lib/config.ts`), legal entity in Terms/Privacy
-- [ ] Health check green: `https://karighar.pk/api/health`
+- [ ] Health check green: `https://thekarighar.com/api/health`
 - [ ] (P1) Add Sentry for error monitoring; enable Supabase backups
 
 ## 6. Smoke test after every deploy

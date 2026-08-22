@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useRequireAuth } from "@/lib/useUser";
@@ -30,6 +31,8 @@ export default function BookingDetailPage() {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [busy, setBusy] = useState(false);
+  const [showCancel, setShowCancel] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
 
   const load = useCallback(async () => {
     const supabase = createClient();
@@ -115,11 +118,14 @@ export default function BookingDetailPage() {
   }
 
   async function cancelJob() {
-    if (!confirm("Cancel this booking?")) return;
     setBusy(true);
-    await createClient().from("jobs").update({ status: "cancelled" }).eq("id", jobId);
+    await createClient()
+      .from("jobs")
+      .update({ status: "cancelled", cancel_reason: cancelReason || null })
+      .eq("id", jobId);
     await load();
     setBusy(false);
+    setShowCancel(false);
   }
 
   async function submitReview(e: React.FormEvent) {
@@ -215,7 +221,9 @@ export default function BookingDetailPage() {
               {bids.map((b) => (
                 <div key={b.id} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3">
                   <div>
-                    <p className="font-medium text-slate-900">{b.pro?.full_name ?? "Pro"}</p>
+                    <Link href={`/providers/${b.provider_id}`} className="font-medium text-slate-900 hover:text-brand-700">
+                      {b.pro?.full_name ?? "Pro"}
+                    </Link>
                     <p className="text-xs text-slate-500">
                       ⭐ {b.rating?.toFixed(1) ?? "New"} {b.eta_minutes ? `· ETA ${b.eta_minutes} min` : ""}
                     </p>
@@ -240,7 +248,9 @@ export default function BookingDetailPage() {
           <h2 className="font-semibold text-slate-900">Your pro</h2>
           <div className="mt-3 flex items-center justify-between">
             <div>
-              <p className="font-medium text-slate-900">{providerProfile.full_name}</p>
+              <Link href={`/providers/${job.provider_id}`} className="font-medium text-slate-900 hover:text-brand-700">
+                {providerProfile.full_name}
+              </Link>
               <p className="text-xs text-slate-500">⭐ {providerRating?.toFixed(1) ?? "New"}</p>
             </div>
             {providerProfile.phone && (
@@ -303,9 +313,32 @@ export default function BookingDetailPage() {
 
       {canCancel && (
         <div className="mt-6">
-          <Button variant="danger" disabled={busy} onClick={cancelJob}>
-            Cancel booking
-          </Button>
+          {showCancel ? (
+            <Card className="border-rose-200">
+              <p className="text-sm font-medium text-slate-800">Why are you cancelling?</p>
+              <select className={`${inputClass} mt-2`} value={cancelReason} onChange={(e) => setCancelReason(e.target.value)}>
+                <option value="">Select a reason…</option>
+                <option>Changed my mind</option>
+                <option>Booked by mistake</option>
+                <option>Found another provider</option>
+                <option>Pro not responding</option>
+                <option>Scheduling conflict</option>
+                <option>Other</option>
+              </select>
+              <div className="mt-3 flex gap-2">
+                <Button variant="danger" disabled={busy} onClick={cancelJob}>
+                  Confirm cancellation
+                </Button>
+                <Button variant="outline" onClick={() => setShowCancel(false)}>
+                  Keep booking
+                </Button>
+              </div>
+            </Card>
+          ) : (
+            <Button variant="danger" onClick={() => setShowCancel(true)}>
+              Cancel booking
+            </Button>
+          )}
         </div>
       )}
 

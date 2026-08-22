@@ -22,6 +22,10 @@ Open http://localhost:3000 — the landing page runs without any backend yet.
    - [`supabase/patch_v4_business_logic.sql`](supabase/patch_v4_business_logic.sql) — **required**: server-enforced pricing/status/reviews, COD payment + commission ledger, and notifications.
    - [`supabase/patch_v5_settlements_disputes.sql`](supabase/patch_v5_settlements_disputes.sql) — **required**: commission-settlement RPC + disputes admin access.
    - [`supabase/patch_v6_price_lock.sql`](supabase/patch_v6_price_lock.sql) — **required**: locks a job's price once set (anti-tamper), lets Pros price quote jobs, and rate-limits bookings.
+   - [`supabase/patch_v7_provider_profiles.sql`](supabase/patch_v7_provider_profiles.sql) — **required**: public provider-profile view (for `/providers/[id]`) + cancellation-reason column.
+   - [`supabase/patch_v8_role_escalation.sql`](supabase/patch_v8_role_escalation.sql) — **required (security)**: blocks users from making themselves admin.
+   - [`supabase/patch_v9_fix_jobs_rls.sql`](supabase/patch_v9_fix_jobs_rls.sql) — **required (critical)**: fixes job visibility so approved providers can see/accept the open job pool.
+   - [`supabase/patch_v10_fix_notify_cast.sql`](supabase/patch_v10_fix_notify_cast.sql) — **required (critical)**: fixes an enum-cast crash that blocked all status updates past "assigned".
      *(Patches are idempotent and safe to re-run.)*
 
 See [`../LAUNCH_READINESS.md`](../LAUNCH_READINESS.md) for the full architect audit and
@@ -108,6 +112,26 @@ supabase/
 ## Testing
 
 ```bash
-npm test        # Vitest unit tests (money/accounting + job status state-machine)
+npm test        # Vitest unit tests (money/accounting, status machine, validation)
 npm run build   # type-check + production build
 ```
+
+## Demo videos (customer / provider / admin walkthroughs)
+
+Records MP4 walkthroughs of each role using Playwright + ffmpeg.
+
+```bash
+# 1. Put the real service-role (secret) key in .env.local: SUPABASE_SERVICE_ROLE_KEY=...
+# 2. Seed demo accounts (creates confirmed customer/provider/admin):
+node --env-file=.env.local scripts/seed.mjs
+# 3. Make sure the dev server is running (npm run dev), then:
+node scripts/record.mjs                 # all three
+node scripts/record.mjs customer        # or one role
+```
+
+Output MP4s land in `videos/`. Demo logins use password `Karighar#2026`.
+
+## Email notifications (deploy Monday)
+
+Scaffold in `supabase/functions/send-notification-email/`. Deploy with a Resend key
+and a Database Webhook on `notifications` INSERT — see the file header for steps.

@@ -36,6 +36,9 @@ export default function AdminJobs() {
                   {new Date(job.created_at).toLocaleString("en-PK")}
                   {job.provider_id ? " · assigned" : " · unassigned"}
                 </p>
+                {job.status === "cancelled" && job.cancel_reason && (
+                  <p className="mt-1 text-xs text-rose-500">Reason: {job.cancel_reason}</p>
+                )}
               </div>
               <div className="text-right">
                 <Badge tone={CLOSED.has(job.status) ? "slate" : "brand"}>{JOB_STATUS_LABEL[job.status]}</Badge>

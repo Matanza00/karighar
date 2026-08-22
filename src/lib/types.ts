@@ -71,6 +71,7 @@ export type Job = {
   price: number | null;
   provider_id: string | null;
   commission_rate: number;
+  cancel_reason: string | null;
   created_at: string;
   updated_at: string;
 };
