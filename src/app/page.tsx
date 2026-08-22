@@ -115,6 +115,12 @@ export default function Home() {
           <span className="font-extrabold text-brand-700">
             KARI<span className="text-accent-500">GHAR</span>
           </span>
+          <nav className="flex gap-4">
+            <Link href="/support" className="hover:text-brand-700">Support</Link>
+            <Link href="/terms" className="hover:text-brand-700">Terms</Link>
+            <Link href="/privacy" className="hover:text-brand-700">Privacy</Link>
+            <Link href="/pro" className="hover:text-brand-700">Become a Pro</Link>
+          </nav>
           <span>© {new Date().getFullYear()} KARIGHAR · Karachi, Pakistan</span>
         </div>
       </footer>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useUser } from "@/lib/useUser";
+import { NotificationBell } from "@/components/NotificationBell";
 import { clsx } from "@/lib/clsx";
 
 type Role = "guest" | "customer" | "provider" | "admin";
@@ -88,7 +89,9 @@ export function AppHeader() {
           {loading ? (
             <div className="h-9 w-20 animate-pulse rounded-lg bg-slate-100" />
           ) : user ? (
-            <div className="relative">
+            <div className="flex items-center gap-1">
+              <NotificationBell userId={user.id} />
+              <div className="relative">
               <button
                 onClick={() => setMenuOpen((o) => !o)}
                 className="flex items-center gap-2 rounded-full border border-slate-200 py-1 pl-1 pr-3 hover:bg-slate-50"
@@ -121,6 +124,7 @@ export function AppHeader() {
                   </div>
                 </>
               )}
+              </div>
             </div>
           ) : (
             <>

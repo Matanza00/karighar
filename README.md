@@ -19,7 +19,11 @@ Open http://localhost:3000 — the landing page runs without any backend yet.
    - [`supabase/schema.sql`](supabase/schema.sql) — tables, security policies, seeded Karachi catalog.
    - [`supabase/patch_v2.sql`](supabase/patch_v2.sql) — provider job access, rating trigger, verification storage bucket.
    - [`supabase/patch_v3_realtime.sql`](supabase/patch_v3_realtime.sql) — **required** for live chat, live location tracking, and live status updates.
-     *(A fresh `schema.sql` already includes v2/v3; the patches are safe to run either way and are for databases created from the first version.)*
+   - [`supabase/patch_v4_business_logic.sql`](supabase/patch_v4_business_logic.sql) — **required**: server-enforced pricing/status/reviews, COD payment + commission ledger, and notifications.
+     *(Patches are idempotent and safe to re-run.)*
+
+See [`../LAUNCH_READINESS.md`](../LAUNCH_READINESS.md) for the full architect audit and
+[`DEPLOYMENT.md`](DEPLOYMENT.md) for the production (Vercel) checklist.
 3. Copy `.env.local.example` → `.env.local` and fill in your project's **URL** and key
    (Project Settings → API). The **publishable key** goes in `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    (or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — either name works).
@@ -88,6 +92,11 @@ supabase/
 - [x] Customer service search
 - [x] Google OAuth sign-in
 - [x] Installable PWA (manifest + generated icons)
+- [x] Server-enforced business logic (pricing, status state-machine, review integrity)
+- [x] COD payment + commission ledger automation
+- [x] In-app notifications (bell + realtime + /notifications)
+- [x] Error/404/loading boundaries · toasts · legal & support pages · health check · robots/sitemap
 - [ ] Phone OTP auth (needs an SMS provider) — replaces email/password
-- [ ] Provider wallet/payouts, escrow, online payments — later phase
-- [ ] Push notifications · route directions (Directions API)
+- [ ] Provider payout/settlement UI · admin disputes UI (P1)
+- [ ] Email notifications + Sentry monitoring + rate limiting (P1)
+- [ ] Escrow + online payments (JazzCash/Easypaisa) · Directions/ETA (P2)

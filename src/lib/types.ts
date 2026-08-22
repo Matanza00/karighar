@@ -111,6 +111,17 @@ export const JOB_STATUS_LABEL: Record<JobStatus, string> = {
   disputed: "Disputed",
 };
 
+export type Notification = {
+  id: string;
+  user_id: string;
+  type: string;
+  title: string;
+  body: string | null;
+  job_id: string | null;
+  read: boolean;
+  created_at: string;
+};
+
 export const KARACHI_AREAS = [
   "Gulshan-e-Iqbal",
   "DHA",

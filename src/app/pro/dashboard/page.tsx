@@ -6,10 +6,12 @@ import { createClient } from "@/lib/supabase/client";
 import { useRequireAuth } from "@/lib/useUser";
 import { AppShell } from "@/components/AppShell";
 import { Card, Button, Badge, inputClass, formatPKR } from "@/components/ui";
+import { useToast } from "@/components/Toast";
 import { JOB_STATUS_LABEL, type Job, type Provider } from "@/lib/types";
 
 export default function ProDashboard() {
   const { user, loading } = useRequireAuth("/pro/dashboard");
+  const toast = useToast();
   const [provider, setProvider] = useState<Provider | null>(null);
   const [available, setAvailable] = useState<Job[]>([]);
   const [mine, setMine] = useState<Job[]>([]);
@@ -74,7 +76,7 @@ export default function ProDashboard() {
     setBidAmount("");
     setBidNote("");
     setBusy(false);
-    alert("Quote sent! The customer will be notified.");
+    toast("Quote sent! The customer will be notified.", "success");
   }
 
   if (loading || fetching) {

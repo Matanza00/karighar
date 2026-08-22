@@ -86,8 +86,13 @@ export default function SettingsPage() {
       </Card>
 
       <Card className="mt-4">
-        <h2 className="font-semibold text-slate-900">About</h2>
+        <h2 className="font-semibold text-slate-900">About & legal</h2>
         <p className="mt-1 text-sm text-slate-500">KARIGHAR · Karachi · v1 (MVP)</p>
+        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+          <a href="/support" className="font-medium text-brand-700">Help & Support</a>
+          <a href="/terms" className="font-medium text-brand-700">Terms</a>
+          <a href="/privacy" className="font-medium text-brand-700">Privacy</a>
+        </div>
       </Card>
 
       <div className="mt-6">

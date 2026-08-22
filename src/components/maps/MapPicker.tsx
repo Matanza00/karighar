@@ -61,7 +61,7 @@ function PickerInner({
         setPanTarget(ll);
         update(ll);
       },
-      () => alert("Couldn't get your location. Drop the pin manually."),
+      () => console.warn("Geolocation unavailable — drop the pin manually."),
       { enableHighAccuracy: true }
     );
   }
