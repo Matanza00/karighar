@@ -1,0 +1,58 @@
+# KARIGHAR — static export (.htaccess for cPanel / Apache)
+# Upload the CONTENTS of the build to your domain's document root (public_html
+# or the subdomain's root). The app must live at the ROOT of a domain/subdomain
+# because asset paths are absolute (/_next/..., /icon-192.png). For a subfolder,
+# rebuild with a `basePath` in next.config.ts.
+
+Options -Indexes
+DirectoryIndex index.html
+
+# --- Force HTTPS (safe to remove if your host terminates SSL differently) ---
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# --- Custom 404 (Next.js generates 404.html) ---
+ErrorDocument 404 /404.html
+
+# --- Correct MIME types ---
+<IfModule mod_mime.c>
+  AddType application/manifest+json    .webmanifest
+  AddType image/svg+xml                .svg
+  AddType application/javascript       .js
+  AddType text/css                     .css
+  AddType image/x-icon                 .ico
+</IfModule>
+
+# --- Gzip compression ---
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE application/manifest+json image/svg+xml
+</IfModule>
+
+# --- Caching ---
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Hashed, immutable build assets -> cache hard for a year.
+  <FilesMatch "\.(js|css|woff2?|ttf|eot|otf)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  # Images -> a week.
+  <FilesMatch "\.(png|jpe?g|gif|svg|ico|webp)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+  # HTML + manifest -> always revalidate so new deploys show up immediately.
+  <FilesMatch "\.(html|webmanifest)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# --- Minor hardening ---
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
