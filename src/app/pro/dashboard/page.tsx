@@ -140,7 +140,7 @@ export default function ProDashboard() {
       ) : (
         <div className="mt-3 space-y-3">
           {mine.map((job) => (
-            <Link key={job.id} href={`/pro/jobs/${job.id}`}>
+            <Link key={job.id} href={`/pro/jobs/view/?id=${job.id}`}>
               <Card className="transition hover:border-brand-300 hover:shadow-md">
                 <div className="flex items-center justify-between">
                   <div>

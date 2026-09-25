@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useRequireAuth } from "@/lib/useUser";
 import { AppShell } from "@/components/AppShell";
@@ -15,11 +15,11 @@ import type { Job, Bid, Profile } from "@/lib/types";
 
 type BidWithPro = Bid & { pro?: Profile; rating?: number };
 
-export default function BookingDetailPage() {
-  const params = useParams<{ id: string }>();
-  const jobId = params.id;
-  const isNew = useSearchParams().get("new") === "1";
-  const { user, loading } = useRequireAuth(`/bookings/${jobId}`);
+function BookingDetailContent() {
+  const search = useSearchParams();
+  const jobId = search.get("id") ?? "";
+  const isNew = search.get("new") === "1";
+  const { user, loading } = useRequireAuth(`/bookings/view/?id=${jobId}`);
 
   const [job, setJob] = useState<Job | null>(null);
   const [providerProfile, setProviderProfile] = useState<Profile | null>(null);
@@ -221,7 +221,7 @@ export default function BookingDetailPage() {
               {bids.map((b) => (
                 <div key={b.id} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3">
                   <div>
-                    <Link href={`/providers/${b.provider_id}`} className="font-medium text-slate-900 hover:text-brand-700">
+                    <Link href={`/providers/view/?id=${b.provider_id}`} className="font-medium text-slate-900 hover:text-brand-700">
                       {b.pro?.full_name ?? "Pro"}
                     </Link>
                     <p className="text-xs text-slate-500">
@@ -248,7 +248,7 @@ export default function BookingDetailPage() {
           <h2 className="font-semibold text-slate-900">Your pro</h2>
           <div className="mt-3 flex items-center justify-between">
             <div>
-              <Link href={`/providers/${job.provider_id}`} className="font-medium text-slate-900 hover:text-brand-700">
+              <Link href={`/providers/view/?id=${job.provider_id}`} className="font-medium text-slate-900 hover:text-brand-700">
                 {providerProfile.full_name}
               </Link>
               <p className="text-xs text-slate-500">⭐ {providerRating?.toFixed(1) ?? "New"}</p>
@@ -348,5 +348,19 @@ export default function BookingDetailPage() {
         </div>
       )}
     </AppShell>
+  );
+}
+
+export default function BookingDetailPage() {
+  return (
+    <Suspense
+      fallback={
+        <AppShell width="narrow">
+          <p className="text-slate-500">Loading…</p>
+        </AppShell>
+      }
+    >
+      <BookingDetailContent />
+    </Suspense>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { AppShell } from "@/components/AppShell";
 import { Card, Badge, Spinner } from "@/components/ui";
@@ -26,13 +26,17 @@ function Stars({ n }: { n: number }) {
   );
 }
 
-export default function ProviderProfilePage() {
-  const id = useParams<{ id: string }>().id;
+function ProviderProfileContent() {
+  const id = useSearchParams().get("id") ?? "";
   const [profile, setProfile] = useState<PublicProfile | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!id) {
+      setLoading(false);
+      return;
+    }
     const supabase = createClient();
     (async () => {
       const [{ data: prof }, { data: revs }] = await Promise.all([
@@ -105,5 +109,19 @@ export default function ProviderProfilePage() {
         </div>
       )}
     </AppShell>
+  );
+}
+
+export default function ProviderProfilePage() {
+  return (
+    <Suspense
+      fallback={
+        <AppShell width="narrow">
+          <Spinner />
+        </AppShell>
+      }
+    >
+      <ProviderProfileContent />
+    </Suspense>
   );
 }

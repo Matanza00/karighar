@@ -46,7 +46,7 @@ export function NotificationBell({ userId }: { userId: string }) {
       await createClient().from("notifications").update({ read: true }).eq("id", n.id);
       setItems((prev) => prev.map((i) => (i.id === n.id ? { ...i, read: true } : i)));
     }
-    if (n.job_id) router.push(`/bookings/${n.job_id}`);
+    if (n.job_id) router.push(`/bookings/view/?id=${n.job_id}`);
   }
 
   async function markAll() {

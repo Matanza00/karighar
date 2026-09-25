@@ -64,7 +64,7 @@ export default function ProviderMapPage() {
                   position={{ lat: j.lat!, lng: j.lng! }}
                   title={j.title}
                   icon={pin("#0f766e")}
-                  onClick={() => router.push(`/pro/jobs/${j.id}`)}
+                  onClick={() => router.push(`/pro/jobs/view/?id=${j.id}`)}
                 />
               ))}
               {open.map((j) => (

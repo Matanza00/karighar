@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { AppShell } from "@/components/AppShell";
 import { Card, Button, Field, inputClass, Badge, formatPKR } from "@/components/ui";
@@ -9,9 +9,8 @@ import { MapPicker } from "@/components/maps/MapPicker";
 import { KARACHI_AREAS, type Service } from "@/lib/types";
 import type { LatLng } from "@/lib/maps";
 
-export default function BookServicePage() {
-  const params = useParams<{ serviceId: string }>();
-  const serviceId = params.serviceId;
+function BookServiceContent() {
+  const serviceId = useSearchParams().get("id") ?? "";
   const router = useRouter();
 
   const [service, setService] = useState<Service | null>(null);
@@ -27,6 +26,10 @@ export default function BookServicePage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!serviceId) {
+      setLoading(false);
+      return;
+    }
     const supabase = createClient();
     (async () => {
       const { data } = await supabase.from("services").select("*").eq("id", serviceId).single();
@@ -45,7 +48,7 @@ export default function BookServicePage() {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) {
-      router.push(`/signin?next=${encodeURIComponent(`/book/${serviceId}`)}`);
+      router.push(`/signin?next=${encodeURIComponent(`/book/service/?id=${serviceId}`)}`);
       return;
     }
     if (!service) return;
@@ -83,7 +86,7 @@ export default function BookServicePage() {
       setBusy(false);
       return;
     }
-    router.push(`/bookings/${job!.id}?new=1`);
+    router.push(`/bookings/view/?id=${job!.id}&new=1`);
   }
 
   if (loading) {
@@ -184,5 +187,19 @@ export default function BookServicePage() {
         </Button>
       </form>
     </AppShell>
+  );
+}
+
+export default function BookServicePage() {
+  return (
+    <Suspense
+      fallback={
+        <AppShell width="narrow">
+          <p className="text-slate-500">Loading…</p>
+        </AppShell>
+      }
+    >
+      <BookServiceContent />
+    </Suspense>
   );
 }

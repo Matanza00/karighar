@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useRequireAuth } from "@/lib/useUser";
 import { AppShell } from "@/components/AppShell";
@@ -22,9 +22,9 @@ const NEXT: Partial<Record<JobStatus, { to: JobStatus; label: string }>> = {
   completed: { to: "paid", label: "Cash received" },
 };
 
-export default function ProJobDetail() {
-  const jobId = useParams<{ id: string }>().id;
-  const { user, loading } = useRequireAuth(`/pro/jobs/${jobId}`);
+function ProJobDetailContent() {
+  const jobId = useSearchParams().get("id") ?? "";
+  const { user, loading } = useRequireAuth(`/pro/jobs/view/?id=${jobId}`);
   const toast = useToast();
   const [job, setJob] = useState<Job | null>(null);
   const [customer, setCustomer] = useState<Profile | null>(null);
@@ -189,5 +189,19 @@ export default function ProJobDetail() {
         </div>
       )}
     </AppShell>
+  );
+}
+
+export default function ProJobDetailPage() {
+  return (
+    <Suspense
+      fallback={
+        <AppShell width="narrow">
+          <p className="text-slate-500">Loading…</p>
+        </AppShell>
+      }
+    >
+      <ProJobDetailContent />
+    </Suspense>
   );
 }

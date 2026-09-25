@@ -26,7 +26,7 @@ export default function NotificationsPage() {
 
   async function open(n: Notification) {
     if (!n.read) await createClient().from("notifications").update({ read: true }).eq("id", n.id);
-    if (n.job_id) router.push(`/bookings/${n.job_id}`);
+    if (n.job_id) router.push(`/bookings/view/?id=${n.job_id}`);
   }
 
   if (loading || !user) {

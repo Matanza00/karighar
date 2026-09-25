@@ -96,7 +96,7 @@ export default function BookPage() {
             </div>
             <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {cat.services.map((s) => (
-                <Link key={s.id} href={`/book/${s.id}`}>
+                <Link key={s.id} href={`/book/service/?id=${s.id}`}>
                   <Card className="h-full transition hover:border-brand-300 hover:shadow-md">
                     <div className="flex items-start justify-between gap-3">
                       <h3 className="font-semibold text-slate-900">{s.name}</h3>

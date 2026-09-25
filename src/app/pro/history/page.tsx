@@ -77,7 +77,7 @@ export default function ProviderHistoryPage() {
       ) : (
         <div className="mt-6 space-y-2">
           {jobs.map((job) => (
-            <Link key={job.id} href={`/pro/jobs/${job.id}`}>
+            <Link key={job.id} href={`/pro/jobs/view/?id=${job.id}`}>
               <Card className="p-4 transition hover:border-brand-300">
                 <div className="flex items-center justify-between">
                   <div>

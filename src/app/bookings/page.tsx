@@ -55,7 +55,7 @@ export default function BookingsPage() {
       ) : (
         <div className="mt-6 space-y-3">
           {jobs.map((job) => (
-            <Link key={job.id} href={`/bookings/${job.id}`}>
+            <Link key={job.id} href={`/bookings/view/?id=${job.id}`}>
               <Card className="transition hover:border-brand-300 hover:shadow-md">
                 <div className="flex items-center justify-between gap-3">
                   <div>

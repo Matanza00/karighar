@@ -84,7 +84,7 @@ export default function CustomJobPage() {
       setBusy(false);
       return;
     }
-    router.push(`/bookings/${job!.id}?new=1`);
+    router.push(`/bookings/view/?id=${job!.id}&new=1`);
   }
 
   return (
